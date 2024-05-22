@@ -42,7 +42,7 @@ h1, h2, h3, h4, h5, h6 {
 st.markdown(custom_css, unsafe_allow_html=True)
 
 # Define the model directory
-model_directory = "/Users/antoinetrabia/Desktop/ML/App"
+model_directory = "https://raw.githubusercontent.com/AntoineTrabia/ML-Project/master"
 
 # Load the tokenizer and model
 @st.cache_resource
