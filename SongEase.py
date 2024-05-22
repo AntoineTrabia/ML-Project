@@ -50,7 +50,7 @@ st.markdown(custom_css, unsafe_allow_html=True)
 files = {
     "config.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/config.json",
     "merges.txt": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/merges.txt",
-    "model.safetensors": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/model.safetensors",
+    "model.safetensors": "https://github.com/msperand/Machine_Learning_Project/raw/master/model.safetensors",
     "special_tokens_map.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/special_tokens_map.json",
     "tokenizer_config.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/tokenizer_config.json",
     "vocab.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/vocab.json"
