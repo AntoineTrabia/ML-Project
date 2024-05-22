@@ -46,32 +46,12 @@ st.markdown(custom_css, unsafe_allow_html=True)
 # Define the model directory
 #model_directory = "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master"
 
-# Define the URLs of the model files on GitHub
-files = {
-    "config.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/config.json",
-    "merges.txt": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/merges.txt",
-    "model.safetensors": "https://github.com/msperand/Machine_Learning_Project/raw/master/model.safetensors",
-    "special_tokens_map.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/special_tokens_map.json",
-    "tokenizer_config.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/tokenizer_config.json",
-    "vocab.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/vocab.json"
-}
+# URL of the GitHub repository
+github_repo = "https://github.com/msperand/Machine_Learning_Project/tree/master"
 
-# Directory to save the downloaded files
-model_dir = "model"
-os.makedirs(model_dir, exist_ok=True)
-
-# Download the files
-for filename, url in files.items():
-    response = requests.get(url)
-    if response.status_code == 200:
-        with open(os.path.join(model_dir, filename), 'wb') as f:
-            f.write(response.content)
-    else:
-        st.error(f"Failed to download {filename}")
-
-# Load the model and tokenizer
-tokenizer = AutoTokenizer.from_pretrained(model_dir)
-model = AutoModelForSequenceClassification.from_pretrained(model_dir)
+# Load the tokenizer and model from the GitHub repo
+tokenizer = AutoTokenizer.from_pretrained(github_repo)
+model = AutoModelForSequenceClassification.from_pretrained(github_repo)
 
 # Function to predict difficulty level
 def predict_difficulty(sentence):
