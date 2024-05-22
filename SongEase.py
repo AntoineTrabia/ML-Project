@@ -2,8 +2,6 @@ import streamlit as st
 from transformers import AutoTokenizer, FlaubertForSequenceClassification
 import torch
 import pandas as pd
-from huggingface_hub import hf_hub_download
-import os
 
 custom_css = """
 <style>
@@ -43,15 +41,12 @@ h1, h2, h3, h4, h5, h6 {
 # Inject the custom CSS
 st.markdown(custom_css, unsafe_allow_html=True)
 
-# Define the model directory
-#model_directory = "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master"
-
 # Load the model and tokenizer
 model_path = 'AntoineTrabia/FrenchSongDifficulty'
 
 try:
     model = FlaubertForSequenceClassification.from_pretrained(model_path)
-    tokenizer = FlaubertTokenizer.from_pretrained(model_path)
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
 
     # Function to predict difficulty level
     def predict_difficulty(sentence):
@@ -118,6 +113,7 @@ try:
             sentences = user_text
             author = user_author
             title = user_title 
+
         if sentences:
             sentence_list = sentences.split('\n')
             results = []
@@ -134,9 +130,6 @@ try:
             st.markdown(f"<h1 style='margin-bottom: 0px; padding-bottom: 0px'>{title}</h1>", unsafe_allow_html=True)
             st.markdown(f"<h2 style='margin-top: 0px; margin-bottom: 0px; padding-top: 5px; color: grey'>{author}</h2>", unsafe_allow_html=True)
     
-    
-    
-    
             # Calculate percentages and weighted average
             total_sentences = len([s for s in sentence_list if s.strip()])
             if total_sentences > 0:
@@ -149,39 +142,40 @@ try:
                 closest_level = round(weighted_average)
                 overall_difficulty = reverse_mapping[closest_level]
     
-            st.markdown(f"""
-        <div style='background-color: #1E90FF; 
-                    color: white; 
-                    text-align: center; 
-                    padding: 10px; 
-                    font-size: 100px; 
-                    width: 200px; 
-                    height: 200px; 
-                    margin: 10px auto 30px auto; 
-                    font-weight: bold; 
-                    display: flex; 
-                    justify-content: center; 
-                    align-items: center;
-                    border-radius: 15px;'>  
-            {overall_difficulty}
-        </div>
-    """, unsafe_allow_html=True)
+                st.markdown(f"""
+                    <div style='background-color: #1E90FF; 
+                                color: white; 
+                                text-align: center; 
+                                padding: 10px; 
+                                font-size: 100px; 
+                                width: 200px; 
+                                height: 200px; 
+                                margin: 10px auto 30px auto; 
+                                font-weight: bold; 
+                                display: flex; 
+                                justify-content: center; 
+                                align-items: center;
+                                border-radius: 15px;'>  
+                        {overall_difficulty}
+                    </div>
+                """, unsafe_allow_html=True)
     
-            st.markdown("<div style='height: 75px;'></div>", unsafe_allow_html=True)  # Add big spacing
-            
-            st.markdown("<span style='font-size: 32px; color: grey;'><b>See details below:</b></span>", unsafe_allow_html=True)
+                st.markdown("<div style='height: 75px;'></div>", unsafe_allow_html=True)  # Add big spacing
+                
+                st.markdown("<span style='font-size: 32px; color: grey;'><b>See details below:</b></span>", unsafe_allow_html=True)
     
-            st.markdown("<span style='font-size: 24px; color: grey;'><b>Here is a breakdown for each sentence:</b></span>", unsafe_allow_html=True)
-            for sentence, level in results:
-                st.write(f"{sentence}\n: {level}\n\n")
+                st.markdown("<span style='font-size: 24px; color: grey;'><b>Here is a breakdown for each sentence:</b></span>", unsafe_allow_html=True)
+                for sentence, level in results:
+                    st.write(f"{sentence}\n: {level}\n\n")
     
-            st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)  # Add big spacing
-            
-            st.markdown("<span style='font-size: 24px; color: grey;'><b>Difficulty Level Distribution:</b></span>", unsafe_allow_html=True)
-            for level, count in difficulty_count.items():
-                percentage = (count / total_sentences) * 100
-                st.write(f"**{level}:** {percentage:.2f}%")
-    
+                st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)  # Add big spacing
+                
+                st.markdown("<span style='font-size: 24px; color: grey;'><b>Difficulty Level Distribution:</b></span>", unsafe_allow_html=True)
+                for level, count in difficulty_count.items():
+                    percentage = (count / total_sentences) * 100
+                    st.write(f"**{level}:** {percentage:.2f}%")
     
         else:
             st.write("Please select a song or directly enter song lyrics.")
+except Exception as e:
+    st.error(f"An error occurred: {str(e)}")
