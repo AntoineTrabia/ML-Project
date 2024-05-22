@@ -45,25 +45,32 @@ st.markdown(custom_css, unsafe_allow_html=True)
 # Define the model directory
 #model_directory = "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master"
 
-# Define the model repository and filenames
-repo_id = "msperand/Machine_Learning_Project/master"
-config_filename = "config.json"
-model_filename = "pytorch_model.bin"
-vocab_filename = "vocab.txt"
+# Define the URLs of the model files on GitHub
+files = {
+    "config.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/config.json",
+    "merges.txt": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/merges.txt",
+    "model.safetensors": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/model.safetensors",
+    "special_tokens_map.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/special_tokens_map.json",
+    "tokenizer_config.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/tokenizer_config.json",
+    "vocab.json": "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master/vocab.json"
+}
 
-# Download model files from GitHub using huggingface_hub
-config_path = hf_hub_download(repo_id=repo_id, filename=config_filename)
-model_path = hf_hub_download(repo_id=repo_id, filename=model_filename)
-vocab_path = hf_hub_download(repo_id=repo_id, filename=vocab_filename)
+# Directory to save the downloaded files
+model_dir = "model"
+os.makedirs(model_dir, exist_ok=True)
 
-# Load the tokenizer and model
-@st.cache_resource
-def load_model():
-    tokenizer = AutoTokenizer.from_pretrained(vocab_path)
-    model = FlaubertForSequenceClassification.from_pretrained(model_path, config=config_path)
-    return tokenizer, model
+# Download the files
+for filename, url in files.items():
+    response = requests.get(url)
+    if response.status_code == 200:
+        with open(os.path.join(model_dir, filename), 'wb') as f:
+            f.write(response.content)
+    else:
+        st.error(f"Failed to download {filename}")
 
-tokenizer, model = load_model()
+# Load the model and tokenizer
+tokenizer = AutoTokenizer.from_pretrained(model_dir)
+model = AutoModelForSequenceClassification.from_pretrained(model_dir)
 
 # Function to predict difficulty level
 def predict_difficulty(sentence):
