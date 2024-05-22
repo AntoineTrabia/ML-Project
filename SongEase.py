@@ -50,8 +50,8 @@ st.markdown(custom_css, unsafe_allow_html=True)
 github_repo = "https://github.com/msperand/Machine_Learning_Project/tree/master"
 
 # Load the tokenizer and model from the GitHub repo
-tokenizer = AutoTokenizer.from_pretrained(github_repo)
-model = AutoModelForSequenceClassification.from_pretrained(github_repo)
+tokenizer = AutoTokenizer.from_pretrained(f"git+{github_repo}")
+model = AutoModelForSequenceClassification.from_pretrained(f"git+{github_repo}")
 
 # Function to predict difficulty level
 def predict_difficulty(sentence):
