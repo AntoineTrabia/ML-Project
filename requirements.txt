@@ -3,3 +3,4 @@ transformers
 torch
 pandas
 huggingface_hub
+sacremoses
