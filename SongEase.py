@@ -46,36 +46,12 @@ st.markdown(custom_css, unsafe_allow_html=True)
 # Define the model directory
 #model_directory = "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master"
 
-# URL of the GitHub repository
-github_repo = "https://github.com/msperand/Machine_Learning_Project/tree/master"
+# Load the model and tokenizer
+model_path = 'AntoineTrabia/FrenchSongDifficulty'
 
-github_repo_url = "https://github.com/msperand/Machine_Learning_Project/tree/master"
-model_directory = "/Users/antoinetrabia/Desktop/ML/App"
-# Function to download and extract model from GitHub
-def download_and_extract_model(url, extract_to='.'):
-    response = requests.get(url)
-    zip_path = os.path.join(extract_to, "model.zip")
-    
-    with open(zip_path, 'wb') as f:
-        f.write(response.content)
-    
-    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        zip_ref.extractall(extract_to)
-    
-    os.remove(zip_path)
-
-# Load the tokenizer and model
-@st.cache_resource
-def load_model():
-    # Download and extract the model if it doesn't exist
-    if not os.path.exists(model_directory):
-        download_and_extract_model(github_repo_url, model_directory)
-    
-    tokenizer = AutoTokenizer.from_pretrained(model_directory)
-    model = AutoModelForSequenceClassification.from_pretrained(model_directory, trust_remote_code=True)
-    return tokenizer, model
-
-tokenizer, model = load_model()
+try:
+    model = FlaubertForSequenceClassification.from_pretrained(model_path)
+    tokenizer = FlaubertTokenizer.from_pretrained(model_path)
 
 # Function to predict difficulty level
 def predict_difficulty(sentence):
