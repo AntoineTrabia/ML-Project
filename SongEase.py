@@ -2,6 +2,7 @@ import streamlit as st
 from transformers import AutoTokenizer, FlaubertForSequenceClassification
 import torch
 import pandas as pd
+from huggingface_hub import hf_hub_download
 
 custom_css = """
 <style>
@@ -42,13 +43,24 @@ h1, h2, h3, h4, h5, h6 {
 st.markdown(custom_css, unsafe_allow_html=True)
 
 # Define the model directory
-model_directory = "https://raw.githubusercontent.com/AntoineTrabia/ML-Project/master"
+#model_directory = "https://raw.githubusercontent.com/msperand/Machine_Learning_Project/master"
+
+# Define the model repository and filenames
+repo_id = "msperand/Machine_Learning_Project/master"
+config_filename = "config.json"
+model_filename = "pytorch_model.bin"
+vocab_filename = "vocab.txt"
+
+# Download model files from GitHub using huggingface_hub
+config_path = hf_hub_download(repo_id=repo_id, filename=config_filename)
+model_path = hf_hub_download(repo_id=repo_id, filename=model_filename)
+vocab_path = hf_hub_download(repo_id=repo_id, filename=vocab_filename)
 
 # Load the tokenizer and model
 @st.cache_resource
 def load_model():
-    tokenizer = AutoTokenizer.from_pretrained(model_directory)
-    model = FlaubertForSequenceClassification.from_pretrained(model_directory, trust_remote_code=True)
+    tokenizer = AutoTokenizer.from_pretrained(vocab_path)
+    model = FlaubertForSequenceClassification.from_pretrained(model_path, config=config_path)
     return tokenizer, model
 
 tokenizer, model = load_model()
