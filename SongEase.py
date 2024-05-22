@@ -1,4 +1,3 @@
-pip install streamlit transformers torch pandas
 import streamlit as st
 from transformers import AutoTokenizer, FlaubertForSequenceClassification
 import torch
